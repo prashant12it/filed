@@ -1,0 +1,116 @@
+<div class="jumbotron text-center">
+  <h1 class="mt-5">Card Payment</h1>
+  <p>Pay now with your credit card</p>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+      <div class="alert alert-success" *ngIf="success" role="alert">
+        Payment received successfully.
+      </div>
+      <div class="alert alert-danger" *ngIf="ValidationError" role="alert">
+        <p>Verify your inputs and make sure you've entered valid data.</p>
+        <ul>
+          <li>All fields marked with * are mandatory</li>
+          <li>Expiration date must be greater than today</li>
+          <li>Security code must be of 3 digits</li>
+          <li>Amount must be greater than 0.</li>
+        </ul>
+      </div>
+      <div class="alert alert-danger" *ngIf="failure" role="alert">
+        Something goes wrong. We've not received your payment. Please try again.
+      </div>
+      <form class="m-form m-form--fit m-form--label-align-right" ngNativeValidate
+            (ngSubmit)="cardPayment(paymentForm)" #paymentForm="ngForm">
+        <div class="m-portlet__body">
+          <div class="form-group mb-0 m-form__group row">
+            <div class="col-lg-12">
+              <label for="cardNumber" class="col-form-label col-md-12 col-sm-12 pl-1 pt-1">
+                Credit Card Number<span class="required-marker"> *</span>
+              </label>
+              <input class="form-control m-input" [maxLength]="20" [autocomplete]="'off'" ngModel
+                     [name]="'cardNumber'"
+                     [pattern]="'^[0-9]+$'"
+                     [type]="'text'" [value]="" id="cardNumber" required/>
+              <div class="alert alert-danger mt-1"
+                   *ngIf="!paymentForm.valid && paymentForm.controls.cardNumber.invalid && paymentForm.controls.cardNumber.errors.pattern  && paymentForm.controls.cardNumber.touched">
+                Valid card number is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-0 m-form__group row">
+            <div class="col-md-6 col-sm-12">
+              <label for="cardHolder" class="col-form-label col-md-12 col-sm-12 pl-1 pt-1">
+                Card Holder<span class="required-marker"> *</span>
+              </label>
+              <input class="form-control m-input" [autocomplete]="'off'" ngModel
+                     [name]="'cardHolder'"
+                     [pattern]="'^[a-zA-Z.\\s]+$'"
+                     [type]="'text'" [value]="" [maxLength]="100" id="cardHolder"
+                     required/>
+              <div class="alert alert-danger mt-1"
+                   *ngIf="!paymentForm.valid && paymentForm.controls.cardHolder.invalid && paymentForm.controls.cardHolder.errors.pattern && paymentForm.controls.cardHolder.touched">
+                Valid card holder name is required.
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <label for="expirationDate" class="col-form-label col-md-12 col-sm-12 pl-1 pt-1">
+                Expiration Date<span class="required-marker"> *</span>
+              </label>
+              <input class="form-control m-input" [autocomplete]="'off'" ngModel
+                     [name]="'expirationDate'"
+                     [type]="'date'" [min]="TomorrowDate" [value]="" id="expirationDate"
+                     required/>
+              <div class="alert alert-danger mt-1"
+                   *ngIf="!paymentForm.valid && paymentForm.controls.expirationDate.invalid && paymentForm.controls.expirationDate.touched">
+                Enter valid expiration date.
+              </div>
+            </div>
+          </div>
+          <div class="form-group mb-0 m-form__group row">
+            <div class="col-md-6 col-sm-12">
+              <label for="securityCode" class="col-form-label col-md-12 col-sm-12 pl-1 pt-1">
+                Security Code<span class="required-marker"> *</span>
+              </label>
+              <input class="form-control m-input" [autocomplete]="'off'" ngModel
+                     [name]="'securityCode'"
+                     [pattern]="'^[0-9]+$'" [minlength]="3" [maxLength]="3" [type]="'text'"id="securityCode"
+                     required/>
+              <div class="alert alert-danger mt-1"
+                   *ngIf="!paymentForm.valid && paymentForm.controls.securityCode.invalid && (paymentForm.controls.securityCode.errors.pattern || paymentForm.controls.securityCode.errors.minlength) && paymentForm.controls.securityCode.touched">
+                Enter valid security code.
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <label for="amount" class="col-form-label col-md-12 col-sm-12 pl-1 pt-1">
+                Amount<span class="required-marker"> *</span>
+              </label>
+              <input class="form-control m-input" [min]="0.01" [step]="0.01" [max]="999999999"
+                     [autocomplete]="'off'" ngModel [name]="'amount'"
+                     [type]="'number'" [value]="" id="amount" required/>
+              <div class="alert alert-danger mt-1"
+                   *ngIf="!paymentForm.valid && paymentForm.controls.amount.invalid && paymentForm.controls.amount.touched">
+                Amount must be greater than 0.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="m-portlet__foot text-center m-portlet__foot--fit mt-3 mb-3">
+          <div class="m-form__actions">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <button [disabled]="!paymentForm.valid"
+                        [type]="'submit'" class="btn btn-primary col-lg-4">
+                  Pay Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-3"></div>
+  </div>
+</div>
